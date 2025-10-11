@@ -2,24 +2,17 @@ package bharad.projects.todo.mapper;
 
 import bharad.projects.todo.dto.TodoDto;
 import bharad.projects.todo.entity.Todo;
+import org.modelmapper.ModelMapper;
 
 public class TodoMapper {
 
-//    JPA Entity to DTO
-    public static TodoDto mapToTodoDto(Todo todo){
-        return new TodoDto(
-                todo.getId(),
-                todo.getTitle(),
-                todo.getDescription(),
-                todo.isCompleted()
-        );
+    // JPA Entity to DTO
+    public static TodoDto mapToTodoDto(Todo todo, ModelMapper modelMapper) {
+        return modelMapper.map(todo, TodoDto.class);
     }
-//    DTO to JPA Entity
-    public static Todo mapToTodo(TodoDto todoDto){
-        Todo todo = new Todo();
-        todo.setTitle(todoDto.getTitle());
-        todo.setDescription(todoDto.getDescription());
-        todo.setCompleted(todoDto.isCompleted());
-        return todo;
+
+    // DTO to JPA Entity
+    public static Todo mapToTodo(TodoDto todoDto, ModelMapper modelMapper) {
+        return modelMapper.map(todoDto, Todo.class);
     }
 }
