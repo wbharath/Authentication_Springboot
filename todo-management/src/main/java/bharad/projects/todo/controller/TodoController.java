@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/todos")
+@CrossOrigin(value = "*")
 public class TodoController {
 
 
