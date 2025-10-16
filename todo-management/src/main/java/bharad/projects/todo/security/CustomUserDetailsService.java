@@ -23,16 +23,30 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        System.out.println("Attempting to load user: " + usernameOrEmail);
+
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
 
+        System.out.println("User found: " + user.getUsername());
+        System.out.println("Password from DB: " + user.getPassword());
+        System.out.println("Roles: " + user.getRoles());
 
-//      set granted authority is an interface and spring security expects authorities
-        Set<GrantedAuthority> authorities= user.getRoles().stream()
-                .map((role) ->new SimpleGrantedAuthority((role.getRoleName())))
+        Set<GrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> {
+                    String roleName = role.getRoleName();
+                    System.out.println("Role from DB: " + roleName);
+                    return new SimpleGrantedAuthority(roleName);
+                })
                 .collect(Collectors.toSet());
-        return new org.springframework.security.core.userdetails.User(usernameOrEmail,
-                null,
-                authorities);
+
+        System.out.println("Authorities: " + authorities);
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                authorities
+        );
     }
+
 }
