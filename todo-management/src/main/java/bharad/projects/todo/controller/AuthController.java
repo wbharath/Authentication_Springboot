@@ -1,6 +1,7 @@
 package bharad.projects.todo.controller;
 
 
+import bharad.projects.todo.dto.JwtAuthResponse;
 import bharad.projects.todo.dto.LoginDto;
 import bharad.projects.todo.dto.RegisterDto;
 import bharad.projects.todo.service.AuthService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class AuthController {
     private AuthService authService;
 
@@ -25,9 +27,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
-        String response  = authService.login(loginDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto){
+        // System.out.println("=== BACKEND RECEIVED ===");
+        // System.out.println("UsernameOrEmail: '" + loginDto.getUsernameOrEmail() + "'");
+        // System.out.println("Password: '" + loginDto.getPassword() + "'");
+        // System.out.println("UsernameOrEmail length: " + (loginDto.getUsernameOrEmail() != null ? loginDto.getUsernameOrEmail().length() : "null"));
+        // System.out.println("Password length: " + (loginDto.getPassword() != null ? loginDto.getPassword().length() : "null"));
+
+        String token = authService.login(loginDto);
+        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+        return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
     }
 
 

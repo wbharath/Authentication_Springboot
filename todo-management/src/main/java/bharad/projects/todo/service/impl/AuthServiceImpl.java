@@ -8,6 +8,7 @@ import bharad.projects.todo.exception.TodoAPIEXception;
 import bharad.projects.todo.repository.RoleRepository;
 import bharad.projects.todo.repository.UserRepository;
 import bharad.projects.todo.service.AuthService;
+import bharad.projects.todo.utils.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +28,9 @@ public class AuthServiceImpl implements AuthService {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
+    private JwtTokenProvider jwtTokenProvider;
+
+
     @Override
     public String register(RegisterDto registerdto) {
         //check username is already existing in DB
@@ -62,7 +66,8 @@ public class AuthServiceImpl implements AuthService {
         ));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
 
-        return "User Logoed in Successfully!!";
+        return token;
     }
 }
